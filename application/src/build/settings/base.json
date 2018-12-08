@@ -1,0 +1,6 @@
+{
+    "app_name": "Speckle",
+    "main_module": "src/main/python/main.py",
+    "author": "Bernhard Raml",
+    "version": "0.1.0"
+}
