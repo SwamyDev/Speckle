@@ -25,5 +25,6 @@ if(NOT glfw_POPULATED)
     add_subdirectory(${glfw_SOURCE_DIR})
 endif()
 
+include_directories(${glfw_SOURCE_DIR}/include)
 add_executable(Speckle window/main.cpp)
 target_link_libraries(Speckle speckle glfw)
