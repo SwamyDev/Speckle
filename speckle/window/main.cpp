@@ -1,13 +1,22 @@
-#include "library.h"
-#include "glad/glad.h"
+#include "Renderer.h"
 #include "GLFW/glfw3.h"
 #include <iostream>
 
 using namespace speckle;
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
-    glViewport(0, 0, width, height);
+namespace {
+  Renderer* renderer;
 }
+
+void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+  renderer->Resize(static_cast<unsigned int>(width), static_cast<unsigned int>(height));
+}
+
+void processInput(GLFWwindow* window) {
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, true);
+}
+
 
 int main() {
     glfwInit();
@@ -17,22 +26,24 @@ int main() {
 
     GLFWwindow* window = glfwCreateWindow(800, 600, "LearnOpenGL", nullptr, nullptr);
     if (window == nullptr) {
-        std::cout << "Failed to create window" << std::endl;
-        glfwTerminate();
-        return -1;
+      std::cout << "Failed to create window" << std::endl;
+      glfwTerminate();
+      return -1;
     }
 
     glfwMakeContextCurrent(window);
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-        std::cout << "Failed to init GLAD" << std::endl;
-        return -1;
-    }
-
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
+    Renderer r((Renderer::ProcAddressFactoryFun)glfwGetProcAddress);
+    renderer = &r;
+
     while (!glfwWindowShouldClose(window)) {
-        glfwSwapBuffers(window);
-        glfwPollEvents();
+      processInput(window);
+
+      renderer->Render();
+
+      glfwSwapBuffers(window);
+      glfwPollEvents();
     }
 
     glfwTerminate();

@@ -11,9 +11,6 @@ add_subdirectory(speckle)
 
 include(FetchContent)
 
-set(WINDOW_EXTERNAL_DIR ${PROJECT_SOURCE_DIR}/window/external)
-set(GLAD_DIR ${WINDOW_EXTERNAL_DIR}/glad)
-
 FetchContent_Declare(glfw
         GIT_REPOSITORY  https://github.com/glfw/glfw.git
         GIT_TAG         origin/master)
@@ -24,6 +21,5 @@ if(NOT glfw_POPULATED)
     add_subdirectory(${glfw_SOURCE_DIR})
 endif()
 
-include_directories(${GLAD_DIR}/include)
-add_executable(Speckle window/main.cpp window/external/glad/src/glad.c)
-target_link_libraries(Speckle speckle ${OPENGL_gl_LIBRARY} glfw)
+add_executable(Speckle window/main.cpp)
+target_link_libraries(Speckle speckle glfw)
