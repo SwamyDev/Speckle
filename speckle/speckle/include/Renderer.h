@@ -2,7 +2,11 @@
 #define SPECKLE_LIBRARY_H
 
 #include <functional>
+#include <memory>
+
 namespace speckle {
+
+class Shader;
 
 class Renderer {
 public:
@@ -15,7 +19,7 @@ public:
 
 private:
   using GlId = unsigned int;
-  GlId itsShaderProgram = 0;
+  std::unique_ptr<Shader> itsShader;
   GlId itsVAO = 0;
   GlId itsVBO = 0;
   GlId itsEBO = 0;
