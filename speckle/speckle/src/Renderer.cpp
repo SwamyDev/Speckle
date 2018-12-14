@@ -12,8 +12,8 @@ Renderer::Renderer(ProcAddressFactoryFun procAddressFactory) {
     return;
   }
 
-  itsShader = std::make_unique<Shader>("/home/bernhard/repos/Speckle/speckle/speckle/src/vertex.glsl",
-                                       "/home/bernhard/repos/Speckle/speckle/speckle/src/fragment.glsl");
+  itsShader = std::make_unique<Shader>("shaders/vertex.glsl",
+                                       "shaders/fragment.glsl");
 
   float vertices[] = {
       0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
@@ -78,4 +78,3 @@ void Renderer::Render() {
 }
 
 }   // namespace speckle
-#pragma clang diagnostic pop
