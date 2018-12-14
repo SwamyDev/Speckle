@@ -5,36 +5,36 @@
 using namespace speckle;
 
 namespace {
-  Renderer* renderer;
+Renderer *renderer;
 }
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
   renderer->Resize(static_cast<unsigned int>(width), static_cast<unsigned int>(height));
 }
 
-void processInput(GLFWwindow* window) {
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, true);
+void processInput(GLFWwindow *window) {
+  if (glfwGetKey(window, GLFW_KEY_ESCAPE)==GLFW_PRESS)
+    glfwSetWindowShouldClose(window, true);
 }
 
-
 int main() {
-    glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+  glfwInit();
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    GLFWwindow* window = glfwCreateWindow(800, 600, "Speckle", nullptr, nullptr);
-    if (window == nullptr) {
-      std::cout << "Failed to create window" << std::endl;
-      glfwTerminate();
-      return -1;
-    }
+  GLFWwindow *window = glfwCreateWindow(800, 600, "Speckle", nullptr, nullptr);
+  if (window==nullptr) {
+    std::cout << "Failed to create window" << std::endl;
+    glfwTerminate();
+    return -1;
+  }
 
-    glfwMakeContextCurrent(window);
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+  glfwMakeContextCurrent(window);
+  glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-    Renderer r((Renderer::ProcAddressFactoryFun)glfwGetProcAddress);
+  {
+    Renderer r((Renderer::ProcAddressFactoryFun) glfwGetProcAddress);
     renderer = &r;
 
     while (!glfwWindowShouldClose(window)) {
@@ -45,7 +45,8 @@ int main() {
       glfwSwapBuffers(window);
       glfwPollEvents();
     }
+  }
 
-    glfwTerminate();
-    return 0;
+  glfwTerminate();
+  return 0;
 }

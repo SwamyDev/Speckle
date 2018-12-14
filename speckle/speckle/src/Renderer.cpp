@@ -12,8 +12,8 @@ Renderer::Renderer(ProcAddressFactoryFun procAddressFactory) {
     return;
   }
 
-  itsShader = std::make_unique<Shader>("/home/ramlb/work/repos/Speckle/speckle/speckle/src/vertex.glsl",
-                                       "/home/ramlb/work/repos/Speckle/speckle/speckle/src/fragment.glsl");
+  itsShader = std::make_unique<Shader>("/home/bernhard/repos/Speckle/speckle/speckle/src/vertex.glsl",
+                                       "/home/bernhard/repos/Speckle/speckle/speckle/src/fragment.glsl");
 
   float vertices[] = {
       0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
@@ -43,10 +43,10 @@ Renderer::Renderer(ProcAddressFactoryFun procAddressFactory) {
                         3,
                         GL_FLOAT,
                         GL_FALSE,
-                        6 * sizeof(float),
-                        (void *) 0); // NOLINT(modernize-use-nullptr) We mean the actual number 0
+                        6*sizeof(float),
+                        (void *) 0); // NOLINT(modernize-use-nullptr) We actually mean the value 0 here
   glEnableVertexAttribArray(0);
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *) (3 * sizeof(float)));
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6*sizeof(float), (void *) (3*sizeof(float)));
   glEnableVertexAttribArray(1);
 
   glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -78,3 +78,4 @@ void Renderer::Render() {
 }
 
 }   // namespace speckle
+#pragma clang diagnostic pop
