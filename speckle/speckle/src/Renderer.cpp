@@ -1,11 +1,21 @@
 #include "Renderer.h"
 #include <iostream>
+#include <chrono>
 
 #include "glad/glad.h"
 #include "stb/stb_image.h"
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtc/type_ptr.hpp"
 #include "Shader.hpp"
 
 namespace speckle {
+
+using namespace std::chrono;
+
+namespace {
+high_resolution_clock::time_point initTime;
+}
 
 Renderer::Renderer(ProcAddressFactoryFun procAddressFactory) {
   if (!gladLoadGLLoader((GLADloadproc) procAddressFactory)) {
@@ -59,6 +69,8 @@ Renderer::Renderer(ProcAddressFactoryFun procAddressFactory) {
   itsShader->Use();
   itsShader->SetInt("texture1", 0);
   itsShader->SetInt("texture2", 1);
+
+  initTime = high_resolution_clock::now();
 }
 
 unsigned int Renderer::LoadTexture(const std::string &path, TextureType type) const {
@@ -99,6 +111,14 @@ void Renderer::Render() {
   glClear(GL_COLOR_BUFFER_BIT);
 
   itsShader->Use();
+
+  auto t = high_resolution_clock::now();
+  auto time = duration_cast<duration<float>>(t - initTime);
+  glm::mat4 trans;
+  trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
+  trans = glm::rotate(trans, time.count(), glm::vec3(0.0, 0.0, 1.0));
+  auto transformLoc = glGetUniformLocation(itsShader->ID, "transform");
+  glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
 
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, itsBoardTexture);
