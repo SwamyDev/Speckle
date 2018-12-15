@@ -1,6 +1,5 @@
 #include "Renderer.h"
 #include <iostream>
-#include <chrono>
 
 #include "glad/glad.h"
 #include "stb/stb_image.h"
@@ -11,10 +10,21 @@
 
 namespace speckle {
 
-using namespace std::chrono;
-
 namespace {
-high_resolution_clock::time_point initTime; // NOLINT(cert-err58-cpp)
+
+glm::vec3 cubePositions[] = { // NOLINT(cert-err58-cpp)
+    glm::vec3(0.0f, 0.0f, 0.0f),
+    glm::vec3(2.0f, 5.0f, -15.0f),
+    glm::vec3(-1.5f, -2.2f, -2.5f),
+    glm::vec3(-3.8f, -2.0f, -12.3f),
+    glm::vec3(2.4f, -0.4f, -3.5f),
+    glm::vec3(-1.7f, 3.0f, -7.5f),
+    glm::vec3(1.3f, -2.0f, -2.5f),
+    glm::vec3(1.5f, 2.0f, -2.5f),
+    glm::vec3(1.5f, 0.2f, -1.5f),
+    glm::vec3(-1.3f, 1.0f, -1.5f)
+};
+
 }
 
 Renderer::Renderer(ProcAddressFactoryFun procAddressFactory) {
@@ -26,51 +36,77 @@ Renderer::Renderer(ProcAddressFactoryFun procAddressFactory) {
   itsShader = std::make_unique<Shader>("resources/shaders/vertex.glsl",
                                        "resources/shaders/fragment.glsl");
 
-  stbi_set_flip_vertically_on_load(true);
-  itsBoardTexture = LoadTexture("resources/container.jpg", GL_RGB);
-  itsFaceTexture = LoadTexture("resources/awesomeface.png", GL_RGBA);
-
   float vertices[] = {
-      0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,
-      0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
-      -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-      -0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f
-  };
+      -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+      0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
+      0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+      0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+      -0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
+      -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
 
-  unsigned int indices[] = {
-      0, 1, 3,
-      1, 2, 3
+      -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+      0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+      0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
+      0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
+      -0.5f, 0.5f, 0.5f, 0.0f, 1.0f,
+      -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+
+      -0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+      -0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+      -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+      -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+      -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+      -0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+
+      0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+      0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+      0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+      0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+      0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+      0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+
+      -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+      0.5f, -0.5f, -0.5f, 1.0f, 1.0f,
+      0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+      0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+      -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+      -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+
+      -0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
+      0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+      0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+      0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+      -0.5f, 0.5f, 0.5f, 0.0f, 0.0f,
+      -0.5f, 0.5f, -0.5f, 0.0f, 1.0f
   };
 
   glGenVertexArrays(1, &itsVAO);
   glGenBuffers(1, &itsVBO);
-  glGenBuffers(1, &itsEBO);
 
   glBindVertexArray(itsVAO);
 
   glBindBuffer(GL_ARRAY_BUFFER, itsVBO);
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, itsEBO);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void *) nullptr);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void *) nullptr);
   glEnableVertexAttribArray(0);
 
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void *) (3*sizeof(float)));
+  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void *) (3*sizeof(float)));
   glEnableVertexAttribArray(1);
 
-  glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void *) (6*sizeof(float)));
-  glEnableVertexAttribArray(2);
+  glEnable(GL_DEPTH_TEST);
 
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-  glBindVertexArray(0);
+  stbi_set_flip_vertically_on_load(true);
+  itsBoardTexture = LoadTexture("resources/container.jpg", GL_RGB);
+  itsFaceTexture = LoadTexture("resources/awesomeface.png", GL_RGBA);
 
   itsShader->Use();
   itsShader->SetInt("texture1", 0);
   itsShader->SetInt("texture2", 1);
 
-  initTime = high_resolution_clock::now();
+  glm::mat4 view;
+  view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+  itsShader->SetMatrix("view", glm::value_ptr(view));
 }
 
 unsigned int Renderer::LoadTexture(const std::string &path, TextureType type) const {
@@ -97,28 +133,25 @@ Renderer::~Renderer() {
     glDeleteVertexArrays(1, &itsVAO);
   if (itsVBO)
     glDeleteBuffers(1, &itsVBO);
-  if (itsEBO)
-    glDeleteBuffers(1, &itsEBO);
   if (itsBoardTexture)
     glDeleteTextures(1, &itsBoardTexture);
 }
 
 void Renderer::Resize(unsigned int width, unsigned int height) {
+  glm::mat4 projection;
+  projection =
+      glm::perspective(glm::radians(45.0f), static_cast<float>(width)/static_cast<float>(height), 0.1f, 100.0f);
+  itsShader->Use();
+  itsShader->SetMatrix("projection", glm::value_ptr(projection));
+
   glViewport(0, 0, width, height);
 }
 
 void Renderer::Render() {
   glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-  glClear(GL_COLOR_BUFFER_BIT);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   itsShader->Use();
-
-  auto t = high_resolution_clock::now();
-  auto time = duration_cast<duration<float>>(t - initTime);
-  glm::mat4 trans;
-  trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
-  trans = glm::rotate(trans, time.count(), glm::vec3(0.0, 0.0, 1.0));
-  itsShader->SetMatrix("transform", glm::value_ptr(trans));
 
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, itsBoardTexture);
@@ -126,7 +159,15 @@ void Renderer::Render() {
   glBindTexture(GL_TEXTURE_2D, itsFaceTexture);
 
   glBindVertexArray(itsVAO);
-  glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+
+  for (auto i = 0; i < 10; ++i) {
+    glm::mat4 model;
+    model = glm::translate(model, cubePositions[i]);
+    model = glm::rotate(model, glm::radians(20.0f*i), glm::vec3(1.0, 0.0, 0.0));
+    itsShader->SetMatrix("model", glm::value_ptr(model));
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+  }
+
   glBindVertexArray(0);
 }
 

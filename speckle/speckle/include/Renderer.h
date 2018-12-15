@@ -26,7 +26,6 @@ private:
 
   GlId itsVAO = 0;
   GlId itsVBO = 0;
-  GlId itsEBO = 0;
   GlId itsBoardTexture = 0;
   GlId itsFaceTexture = 0;
 };

@@ -36,6 +36,7 @@ int main() {
   {
     Renderer r((Renderer::ProcAddressFactoryFun) glfwGetProcAddress);
     renderer = &r;
+    renderer->Resize(800, 600);
 
     while (!glfwWindowShouldClose(window)) {
       processInput(window);
