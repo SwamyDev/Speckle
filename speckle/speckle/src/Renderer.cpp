@@ -10,6 +10,8 @@
 
 namespace speckle {
 
+using namespace std::chrono;
+
 namespace {
 
 glm::vec3 cubePositions[] = { // NOLINT(cert-err58-cpp)
@@ -104,9 +106,7 @@ Renderer::Renderer(ProcAddressFactoryFun procAddressFactory) {
   itsShader->SetInt("texture1", 0);
   itsShader->SetInt("texture2", 1);
 
-  glm::mat4 view;
-  view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-  itsShader->SetMatrix("view", glm::value_ptr(view));
+  itsLastFrame = Clock::now();
 }
 
 unsigned int Renderer::LoadTexture(const std::string &path, TextureType type) const {
@@ -138,20 +138,20 @@ Renderer::~Renderer() {
 }
 
 void Renderer::Resize(unsigned int width, unsigned int height) {
-  glm::mat4 projection;
-  projection =
-      glm::perspective(glm::radians(45.0f), static_cast<float>(width)/static_cast<float>(height), 0.1f, 100.0f);
-  itsShader->Use();
-  itsShader->SetMatrix("projection", glm::value_ptr(projection));
-
   glViewport(0, 0, width, height);
+  itsCamera.Resize(width, height);
 }
 
 void Renderer::Render() {
+  itsDeltaTime = std::chrono::duration_cast<std::chrono::duration<float>>(Clock::now() - itsLastFrame).count();
+
   glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // NOLINT(hicpp-signed-bitwise)
 
   itsShader->Use();
+
+  itsShader->SetMatrix("view", itsCamera.GetViewPort());
+  itsShader->SetMatrix("projection", itsCamera.GetPerspective());
 
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, itsBoardTexture);
@@ -169,6 +169,8 @@ void Renderer::Render() {
   }
 
   glBindVertexArray(0);
+
+  itsLastFrame = Clock::now();
 }
 
 }   // namespace speckle
