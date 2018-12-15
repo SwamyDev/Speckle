@@ -3,6 +3,7 @@
 
 #include <functional>
 #include <memory>
+#include <vector>
 
 namespace speckle {
 
@@ -19,10 +20,15 @@ public:
 
 private:
   using GlId = unsigned int;
+  using TextureType = int;
+  unsigned int LoadTexture(const std::string &path, TextureType type) const;
   std::unique_ptr<Shader> itsShader;
+
   GlId itsVAO = 0;
   GlId itsVBO = 0;
   GlId itsEBO = 0;
+  GlId itsBoardTexture = 0;
+  GlId itsFaceTexture = 0;
 };
 
 }   // namespace speckle
