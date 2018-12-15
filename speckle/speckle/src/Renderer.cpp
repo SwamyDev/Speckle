@@ -106,6 +106,7 @@ Renderer::~Renderer() {
 void Renderer::Resize(unsigned int width, unsigned int height) {
   glViewport(0, 0, width, height);
 }
+
 void Renderer::Render() {
   glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT);
