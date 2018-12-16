@@ -1,14 +1,13 @@
 #ifndef SPECKLE_LIBRARY_H
 #define SPECKLE_LIBRARY_H
 
-#include <functional>
 namespace speckle {
 
 class Renderer {
 public:
-  typedef void* (* ProcAddressFactoryFun)(const char *name);
+  using ColorType = unsigned int;
 
-  explicit Renderer(ProcAddressFactoryFun procAddressFactory);
+  Renderer();
   ~Renderer();
   void Resize(unsigned int width, unsigned int height);
   void Render();

@@ -20,12 +20,7 @@ const char* fragmentShaderSource = "#version 330 core\n"
                                    "}\n\0";
 }
 
-Renderer::Renderer(ProcAddressFactoryFun procAddressFactory) {
-  if (!gladLoadGLLoader((GLADloadproc)procAddressFactory)) {
-    std::cout << "Failed to init GLAD" << std::endl;
-    return;
-  }
-
+Renderer::Renderer() {
   unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
   glShaderSource(vertexShader, 1, &vertexShaderSource, nullptr);
   glCompileShader(vertexShader);
@@ -105,7 +100,7 @@ void Renderer::Resize(unsigned int width, unsigned int height) {
 }
 
 void Renderer::Render() {
-  glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+  glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
   glClear(GL_COLOR_BUFFER_BIT);
 
   glUseProgram(itsShaderProgram);

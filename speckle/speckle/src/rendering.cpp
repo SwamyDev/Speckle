@@ -1,6 +1,7 @@
 #include "rendering.hpp"
 #include <vector>
 #include <memory>
+
 #include "Renderer.hpp"
 
 namespace speckle {
@@ -9,9 +10,10 @@ namespace rendering {
 namespace {
 std::vector<std::unique_ptr<Renderer>> renderers;
 }
-ID MakeRenderer(ProcAddressFactoryFun procAddressFactory) {
+
+ID MakeRenderer() {
   auto id = renderers.size();
-  renderers.emplace_back(std::make_unique<Renderer>(procAddressFactory));
+  renderers.emplace_back(std::make_unique<Renderer>());
   return static_cast<ID>(id);
 }
 
@@ -22,7 +24,6 @@ void Render(ID self) {
 void Resize(ID self, unsigned int width, unsigned int height) {
   renderers[self]->Resize(width, height);
 }
-
 void DisposeRenderer(ID self) {
   renderers[self] = nullptr;
 }

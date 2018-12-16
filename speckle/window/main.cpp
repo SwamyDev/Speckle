@@ -1,4 +1,5 @@
 #include "rendering.hpp"
+#include "glad/glad.h"
 #include "GLFW/glfw3.h"
 #include <iostream>
 
@@ -6,8 +7,8 @@ using namespace speckle;
 
 class RenderingRAII {
 public:
-  explicit RenderingRAII(rendering::ProcAddressFactoryFun factory) {
-    itsRenderer = rendering::MakeRenderer(factory);
+  RenderingRAII() {
+    itsRenderer = rendering::MakeRenderer();
   }
 
   ~RenderingRAII() {
@@ -55,8 +56,13 @@ int main() {
   glfwMakeContextCurrent(window);
   glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
+  if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+    std::cout << "Failed to init GLAD" << std::endl;
+    return -1;
+  }
+
   {
-    RenderingRAII r((rendering::ProcAddressFactoryFun) glfwGetProcAddress);
+    RenderingRAII r;
     render = &r;
 
     while (!glfwWindowShouldClose(window)) {

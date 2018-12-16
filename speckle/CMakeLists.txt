@@ -15,11 +15,6 @@ add_subdirectory(speckle)
 
 add_subdirectory(test)
 
-add_library(Speckle SHARED speckle/src)
-set_property(TARGET speckle PROPERTY POSITION_INDEPENDENT_CODE ON)
-set_target_properties(Speckle PROPERTIES PUBLIC_HEADER speckle/include)
-target_link_libraries(Speckle speckle)
-
 include(FetchContent)
 
 FetchContent_Declare(glfw
@@ -33,5 +28,6 @@ if(NOT glfw_POPULATED)
 endif()
 
 include_directories(${glfw_SOURCE_DIR}/include)
-add_executable(SpeckleWindow window/main.cpp)
+include_directories("speckle/external/glad/include")
+add_executable(SpeckleWindow speckle/external/glad/src/glad.c window/main.cpp)
 target_link_libraries(SpeckleWindow Speckle glfw)
