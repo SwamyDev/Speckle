@@ -4,7 +4,9 @@
 namespace speckle {
 namespace rendering {
 
-using ID = unsigned int;
+extern "C" {
+
+using ID = unsigned int ;
 
 typedef void *(*ProcAddressFactoryFun)(const char *name);
 
@@ -12,6 +14,8 @@ ID MakeRenderer(ProcAddressFactoryFun procAddressFactory);
 void Resize(ID self, unsigned int width, unsigned int height);
 void Render(ID self);
 void DisposeRenderer(ID id);
+
+}
 
 } // namespace rendering
 } // namespace speckle
