@@ -1,7 +1,5 @@
-#include "Renderer.h"
+#include "Renderer.hpp"
 #include <iostream>
-#include <Renderer.h>
-
 #include "glad/glad.h"
 
 namespace speckle {

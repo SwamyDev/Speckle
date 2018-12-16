@@ -1,51 +1,74 @@
-#include "Renderer.h"
+#include "rendering.hpp"
 #include "GLFW/glfw3.h"
 #include <iostream>
 
 using namespace speckle;
 
+class RenderingRAII {
+public:
+  explicit RenderingRAII(rendering::ProcAddressFactoryFun factory) {
+    itsRenderer = rendering::MakeRenderer(factory);
+  }
+
+  ~RenderingRAII() {
+    rendering::DisposeRenderer(itsRenderer);
+  }
+
+  void Resize(unsigned int width, unsigned int height) {
+    rendering::Resize(itsRenderer, width, height);
+  }
+
+  void Render() {
+    rendering::Render(itsRenderer);
+  }
+
+private:
+  rendering::ID itsRenderer;
+};
+
 namespace {
-  Renderer* renderer;
+RenderingRAII *render;
 }
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
-  renderer->Resize(static_cast<unsigned int>(width), static_cast<unsigned int>(height));
+void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
+  render->Resize(static_cast<unsigned int>(width), static_cast<unsigned int>(height));
 }
 
-void processInput(GLFWwindow* window) {
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, true);
+void processInput(GLFWwindow *window) {
+  if (glfwGetKey(window, GLFW_KEY_ESCAPE)==GLFW_PRESS)
+    glfwSetWindowShouldClose(window, true);
 }
-
 
 int main() {
-    glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+  glfwInit();
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    GLFWwindow* window = glfwCreateWindow(800, 600, "Speckle", nullptr, nullptr);
-    if (window == nullptr) {
-      std::cout << "Failed to create window" << std::endl;
-      glfwTerminate();
-      return -1;
-    }
+  GLFWwindow *window = glfwCreateWindow(800, 600, "Speckle", nullptr, nullptr);
+  if (window==nullptr) {
+    std::cout << "Failed to create window" << std::endl;
+    glfwTerminate();
+    return -1;
+  }
 
-    glfwMakeContextCurrent(window);
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+  glfwMakeContextCurrent(window);
+  glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-    Renderer r((Renderer::ProcAddressFactoryFun)glfwGetProcAddress);
-    renderer = &r;
+  {
+    RenderingRAII r((rendering::ProcAddressFactoryFun) glfwGetProcAddress);
+    render = &r;
 
     while (!glfwWindowShouldClose(window)) {
       processInput(window);
 
-      renderer->Render();
+      r.Render();
 
       glfwSwapBuffers(window);
       glfwPollEvents();
     }
+  }
 
-    glfwTerminate();
-    return 0;
+  glfwTerminate();
+  return 0;
 }
