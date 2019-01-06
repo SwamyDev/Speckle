@@ -9,6 +9,8 @@ class RenderingRAII {
 public:
   RenderingRAII() {
     itsRenderer = rendering::MakeRenderer();
+    if (itsRenderer==-1)
+      exit(1);
   }
 
   ~RenderingRAII() {
@@ -56,11 +58,7 @@ int main() {
   glfwMakeContextCurrent(window);
   glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-  if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-    std::cout << "Failed to init GLAD" << std::endl;
-    return -1;
-  }
-
+  rendering::InitializeWith((rendering::LoadProcess) glfwGetProcAddress);
   {
     RenderingRAII r;
     render = &r;

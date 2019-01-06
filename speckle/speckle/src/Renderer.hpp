@@ -5,8 +5,6 @@ namespace speckle {
 
 class Renderer {
 public:
-  using ColorType = unsigned int;
-
   Renderer();
   ~Renderer();
   void Resize(unsigned int width, unsigned int height);

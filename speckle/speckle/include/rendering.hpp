@@ -6,9 +6,11 @@ namespace rendering {
 
 extern "C" {
 
-using ID = unsigned int ;
+using ID = int;
+typedef void* (* LoadProcess)(const char *name);
 
 
+void InitializeWith(LoadProcess loading);
 ID MakeRenderer();
 
 void Resize(ID self, unsigned int width, unsigned int height);
