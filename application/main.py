@@ -3,8 +3,7 @@ import OpenGL.GL as gl
 from PyQt5 import uic
 from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QMainWindow, QApplication
-
-from wrapper import Speckle
+from fleck import Renderer
 
 
 class MainWindow(QMainWindow):
@@ -27,9 +26,9 @@ class MainWindow(QMainWindow):
 
     def paintGL(self):
         if self.speckle is None:
-            self.speckle = Speckle()
-            self.speckle.Resize(self.windowsWidth, self.windowsHeight)
-        self.speckle.Render()
+            self.speckle = Renderer()
+            self.speckle.resize(self.windowsWidth, self.windowsHeight)
+        self.speckle.render()
 
     def update_view(self):
         self.view.update()
