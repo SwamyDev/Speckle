@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/speckle.iml" filepath="$PROJECT_DIR$/.idea/speckle.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/Speckle.iml" filepath="$PROJECT_DIR$/.idea/Speckle.iml" />
     </modules>
   </component>
 </project>
