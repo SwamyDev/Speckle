@@ -15,6 +15,14 @@ matrix:
           packages:
             - clang-6.0
             - libstdc++6
+            -
+      install:
+            - wget http://www.cmake.org/files/v2.8/cmake-3.13.2.tar.gz
+            - tar xf cmake-3.13.2.tar.gz
+            - cd cmake-3.13.2
+            - make
+            - sudo make install
+            - cd ..
       env:
         - MATRIX_EVAL="CC=clang-6.0 && CXX=clang++-6.0"
         - LINKER_FLAGS="-stdlib=libc++ -lc++abi"
