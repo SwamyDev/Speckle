@@ -8,7 +8,9 @@ matrix:
 
 before_install:
   - eval "${MATRIX_EVAL}"
-
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+    sudo apt-get install -qq build-essential xorg-dev libgl1-mesa-dev libglu1-mesa-dev libglew-dev libglm-dev;
+    fi
 script:
-  - cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXE_LINKER_FLAGS=${LINKER_FLAGS} .
+  - cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" .
   - cmake --build . -- VERBOSE=1
