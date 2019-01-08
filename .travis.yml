@@ -1,5 +1,6 @@
-language: cpp
+sudo: required
 dist: trusty
+language: cpp
 
 matrix:
   include:
@@ -10,8 +11,7 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-trusty-6.0
-            - sourceline: 'deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-6.0 main'
-            key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
+            - kalakris-cmake
           packages:
             - clang-6.0
             - libstdc++6
