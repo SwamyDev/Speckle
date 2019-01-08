@@ -1,7 +1,12 @@
 import os
+import platform
 from ctypes import cdll
 
-speckle = cdll.LoadLibrary(os.path.join(os.path.dirname(__file__), 'lib/libSpeckle.so'))
+name = "libspeckle.so"
+if platform.uname()[0] == "Windows":
+    name = "speckle.dll"
+
+speckle = cdll.LoadLibrary(os.path.join(os.path.dirname(__file__), os.path.join('lib', name)))
 
 
 class Renderer:

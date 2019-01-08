@@ -1,8 +1,9 @@
-import fleck
 import pytest
 from OpenGL.GL import *
 from OpenGL.GLUT import *
 from PIL import Image
+
+import fleck
 
 WIDTH = 160
 HEIGHT = 90
@@ -18,7 +19,7 @@ def context():
     glutInit(sys.argv)
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB)
     glutInitWindowSize(WIDTH, HEIGHT)
-    glutCreateWindow("Test OpenGL context")
+    glutCreateWindow(b"Test OpenGL context")
 
 
 def get_scene():
