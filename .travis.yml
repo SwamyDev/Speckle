@@ -23,5 +23,5 @@ before_install:
     sudo apt-get install -qq build-essential xorg-dev libgl1-mesa-dev libglu1-mesa-dev libglew-dev libglm-dev libclang-6.0-dev;
     fi
 script:
-  - cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXE_LINKER_FLAGS=${LINKER_FLAGS} -G "CodeBlocks - Unix Makefiles" .
+  - cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXE_LINKER_FLAGS=-stdlib=libc++ -lc++abi -G "CodeBlocks - Unix Makefiles" .
   - cmake --build . -- VERBOSE=1
