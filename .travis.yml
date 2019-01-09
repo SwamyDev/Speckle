@@ -14,7 +14,6 @@ matrix:
             - libstdc++6
       env:
         - MATRIX_EVAL="CC=clang-6.0 && CXX=clang++-6.0"
-        - LINKER_FLAGS="-stdlib=libc++ -lc++abi"
 
 before_install:
   - eval "${MATRIX_EVAL}"
@@ -24,5 +23,5 @@ before_install:
     sudo apt-get install -qq build-essential xorg-dev libgl1-mesa-dev libglu1-mesa-dev libglew-dev libglm-dev;
     fi
 script:
-  - cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXE_LINKER_FLAGS=${LINKER_FLAGS} -G "CodeBlocks - Unix Makefiles" .
+  - cmake -DCMAKE_BUILD_TYPE=Release -G "CodeBlocks - Unix Makefiles" .
   - cmake --build . -- VERBOSE=1
