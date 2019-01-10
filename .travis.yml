@@ -15,7 +15,8 @@ matrix:
         - GENERATOR="CodeBlocks - Unix Makefiles"
         
   include:
-    - os: windows   
+    - os: windows
+      compiler: MSVC
       env:  
         - GENERATOR="CodeBlocks - NMake Makefiles"
         
