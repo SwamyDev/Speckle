@@ -9,7 +9,7 @@ matrix:
         apt:
           sources:
             - llvm-toolchain-xenial-6.0
-          packages: ['clang-6.0', 'libstdc++-8-dev']
+          packages: ['clang-6.0', 'libstdc++-8']
       env:
         - MATRIX_EVAL="CC=clang-6.0 && CXX=clang++-6.0"
 
@@ -21,5 +21,5 @@ before_install:
     sudo apt-get install -qq build-essential xorg-dev libgl1-mesa-dev libglu1-mesa-dev libglew-dev libglm-dev libclang-6.0-dev;
     fi
 script:
-  - cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=/usr/bin/clang-6.0 -DCMAKE_CXX_COMPILER=/usr/bin/clang++-6.0 -DCMAKE_EXE_LINKER_FLAGS="-stdlib=libstdc++" -G "CodeBlocks - Unix Makefiles" .
+  - cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXE_LINKER_FLAGS="-stdlib=libstdc++" -G "CodeBlocks - Unix Makefiles" .
   - cmake --build . -- -j 2 VERBOSE=1
