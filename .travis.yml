@@ -43,5 +43,5 @@ before_script:
     
 script:
   - export PATH=$MSBUILD_PATH:$PATH
-  - cmake -DCMAKE_BUILD_TYPE=Release -G ${GENERATOR} . -- VERBOSE=1
+  - cmake -DCMAKE_BUILD_TYPE=Release . 
   - cmake --build . -- -j 2 VERBOSE=1
