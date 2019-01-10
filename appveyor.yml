@@ -9,3 +9,7 @@ build_script:
       cmake -DCMAKE_BUILD_TYPE=Release -G "CodeBlocks - NMake Makefiles" .
 
       cmake --build .
+
+      bin\SpeckleUnitTests.exe
+
+      bin\SpeckleIntegrationTests.exe
