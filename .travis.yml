@@ -16,8 +16,8 @@ matrix:
         
   include:
     - os: windows   
-  env:
-    - GENERATOR="CodeBlocks - NMake Makefiles"
+      env:  
+        - GENERATOR="CodeBlocks - NMake Makefiles"
         
 before_install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
@@ -41,5 +41,5 @@ before_script:
  - cd ${TRAVIS_BUILD_DIR}
     
 script:
-  - cmake -DCMAKE_BUILD_TYPE=Release -G "${GENERATOR}" .
+  - cmake -DCMAKE_BUILD_TYPE=Release -G ${GENERATOR} .
   - cmake --build . -- -j 2 VERBOSE=1
