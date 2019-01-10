@@ -12,15 +12,7 @@ matrix:
           packages: ['clang-6.0', 'libstdc++-8-dev']
       env:
         - MATRIX_EVAL="CC=clang-6.0 && CXX=clang++-6.0"
-        - GENERATOR="CodeBlocks - Unix Makefiles"
-        
-  include:
-    - os: windows
-      env:  
-        - MATRIX_EVAL="CC=CL && CXX=CL"
-        - MSBUILD_PATH="/C/Program Files (x86)/Microsoft Visual Studio/2017/BuildTools/MSBuild/15.0/Bin"
-        - GENERATOR="CodeBlocks - NMake Makefiles"
-        
+
 before_install:
   - eval "${MATRIX_EVAL}"
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
@@ -28,7 +20,7 @@ before_install:
     sudo apt-get update;
     sudo apt-get install -qq build-essential xorg-dev libgl1-mesa-dev libglu1-mesa-dev libglew-dev libglm-dev libclang-6.0-dev;
     fi
-    
+
 install:
   - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
   - mkdir -p ${DEPS_DIR} && cd ${DEPS_DIR}
@@ -38,11 +30,10 @@ install:
       mkdir cmake && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake
       export PATH=${DEPS_DIR}/cmake/bin:${PATH}
     fi
-    
+
 before_script:
- - cd ${TRAVIS_BUILD_DIR}
-    
+  - cd ${TRAVIS_BUILD_DIR}
+
 script:
-  - export PATH=$MSBUILD_PATH:$PATH
-  - cmake -DCMAKE_BUILD_TYPE=Release -G "CodeBlocks - NMake Makefiles" . 
-  - cmake --build .
+  - cmake -DCMAKE_BUILD_TYPE=Release -G "CodeBlocks - Unix Makefiles" .
+  - cmake --build . -- -j 2 VERBOSE=1
