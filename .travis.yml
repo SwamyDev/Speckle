@@ -37,3 +37,6 @@ before_script:
 script:
   - cmake -DCMAKE_BUILD_TYPE=Release -G "CodeBlocks - Unix Makefiles" .
   - cmake --build . -- -j 2 VERBOSE=1
+  - cd bin
+  - ./SpeckleUnitTests
+  - ./SpeckleIntegrationTests
