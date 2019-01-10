@@ -12,10 +12,16 @@ matrix:
           packages: ['clang-6.0', 'libstdc++-8-dev']
       env:
         - MATRIX_EVAL="CC=clang-6.0 && CXX=clang++-6.0"
+        - GENERATOR="CodeBlocks - Unix Makefiles"
+        
+  include:
+    - os: windows   
+  env:
+    - GENERATOR="CodeBlocks - NMake Makefiles"
         
 before_install:
-  - eval "${MATRIX_EVAL}"
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+    eval "${MATRIX_EVAL}"
     sudo add-apt-repository --yes ppa:ubuntu-toolchain-r/test;
     sudo apt-get update;
     sudo apt-get install -qq build-essential xorg-dev libgl1-mesa-dev libglu1-mesa-dev libglew-dev libglm-dev libclang-6.0-dev;
@@ -35,5 +41,5 @@ before_script:
  - cd ${TRAVIS_BUILD_DIR}
     
 script:
-  - cmake -DCMAKE_BUILD_TYPE=Release -G "CodeBlocks - Unix Makefiles" .
+  - cmake -DCMAKE_BUILD_TYPE=Release -G ${GENERATOR} .
   - cmake --build . -- -j 2 VERBOSE=1
