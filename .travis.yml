@@ -43,5 +43,5 @@ before_script:
     
 script:
   - export PATH=$MSBUILD_PATH:$PATH
-  - cmake -DCMAKE_BUILD_TYPE=Release . 
+  - cmake -DCMAKE_BUILD_TYPE=Release -G "CodeBlocks - NMake Makefiles" . 
   - cmake --build .
