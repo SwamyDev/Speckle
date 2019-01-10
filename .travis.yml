@@ -17,12 +17,13 @@ matrix:
   include:
     - os: windows
       env:  
+        - MATRIX_EVAL="CC=CL && CXX=CL"
         - MSBUILD_PATH="/C/Program Files (x86)/Microsoft Visual Studio/2017/BuildTools/MSBuild/15.0/Bin"
         - GENERATOR="CodeBlocks - NMake Makefiles"
         
 before_install:
+  - eval "${MATRIX_EVAL}"
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-    eval "${MATRIX_EVAL}"
     sudo add-apt-repository --yes ppa:ubuntu-toolchain-r/test;
     sudo apt-get update;
     sudo apt-get install -qq build-essential xorg-dev libgl1-mesa-dev libglu1-mesa-dev libglew-dev libglm-dev libclang-6.0-dev;
