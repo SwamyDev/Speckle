@@ -16,7 +16,6 @@ matrix:
         
   include:
     - os: windows
-      compiler: MSVC
       env:  
         - MATRIX_EVAL="CC=CL.exe && CXX=CL.exe"
         - GENERATOR="CodeBlocks - NMake Makefiles"
