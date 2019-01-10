@@ -12,6 +12,15 @@ matrix:
           packages: ['clang-6.0', 'libstdc++-8-dev']
       env:
         - MATRIX_EVAL="CC=clang-6.0 && CXX=clang++-6.0"
+        
+before_install:
+  - eval "${MATRIX_EVAL}"
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+    sudo add-apt-repository --yes ppa:ubuntu-toolchain-r/test;
+    sudo apt-get update;
+    sudo apt-get install -qq build-essential xorg-dev libgl1-mesa-dev libglu1-mesa-dev libglew-dev libglm-dev libclang-6.0-dev;
+    fi
+    
 install:
   - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
   - mkdir -p ${DEPS_DIR} && cd ${DEPS_DIR}
@@ -21,14 +30,9 @@ install:
       mkdir cmake && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake
       export PATH=${DEPS_DIR}/cmake/bin:${PATH}
     fi
-        
-before_install:
-  - eval "${MATRIX_EVAL}"
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-    sudo add-apt-repository --yes ppa:ubuntu-toolchain-r/test;
-    sudo apt-get update;
-    sudo apt-get install -qq build-essential xorg-dev libgl1-mesa-dev libglu1-mesa-dev libglew-dev libglm-dev libclang-6.0-dev;
-    fi
+    
+before_script:
+ - cd ${TRAVIS_BUILD_DIR}
     
 script:
   - cmake -DCMAKE_BUILD_TYPE=Release -G "CodeBlocks - Unix Makefiles" .
